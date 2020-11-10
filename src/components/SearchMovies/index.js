@@ -1,10 +1,10 @@
-import React, {useState} from "react";
+import React, {useState} from 'react';
+import Movie from '../Movie';
 
-export default function SearchMovies(){
-    
-    //states- input query, movies
+function SearchMovies(){  
+    // Create state for input query
     const [query, setQuery] = useState('');
-    //create the state for movies, and update that state appropriate
+    //create the state for movies
     const [movies, setMovies] = useState([]);
     
     const searchMovies = async (e) => {
@@ -16,21 +16,28 @@ export default function SearchMovies(){
             const res = await fetch(url);
             const data  = await res.json();
             setMovies(data.results);
-        } catch(err){
+        }catch(err){
             console.error(err);
         }
     }
-
+    
     return (
-        <form className="form" onSubmit={searchMovies}>
-            <label className="label" htmlFor="query">Movie Name</label>
-            <input 
-                className="input" type="text" name="query"
-                placeholder="Your movie"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                />
-            <button className="button" type="submit">Search</button>
-        </form>
+        <div>
+            <form className="form" onSubmit={searchMovies}>
+                <label className="label" htmlFor="query">Movie Name</label>
+                <input className="input" type="text" name="query"
+                    placeholder="i.e. Jurassic Park"
+                    value={query} onChange={(e) => setQuery(e.target.value)}
+                    />
+                <button className="button" type="submit">Search</button>
+            </form>
+            <div className="card-list">
+                {movies.filter(movie => movie.poster_path).map(movie => (
+                    <Movie movie={movie} key={movie.id} />
+                ))}
+            </div>    
+        </div>
     )
 }
+
+export default SearchMovies;
